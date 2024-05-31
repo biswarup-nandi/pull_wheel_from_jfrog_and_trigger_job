@@ -1,17 +1,19 @@
+def DBCLIPATH = "/usr/local/bin"
+
 pipeline {
     agent any
+
+    parameters {
+        string defaultValue: 'dev', description: 'Deployment Environment', name: 'env'
+        string defaultValue: 'dab_e2e_job', description: 'Deployment Environment', name: 'job_name'
+    }
+
 
     environment {
         ARTIFACTORY_URL = 'https://biswarupnandi.jfrog.io/artifactory'
         ARTIFACTORY_REPO = 'dbx-dbx-python'
         ARTIFACTORY_SERVER = 'jfrog-artifact-instance'
         PYTHON_VERSION = '3.10.12'
-        // DATABRICKS_HOST = 'https://accounts.cloud.databricks.com'
-        // DATABRICKS_AUTH_TYPE = 'oauth-m2m'
-        // DATABRICKS_REGION = 'us-east-1'
-        // DATABRICKS_ACCOUNT_ID = credentials('databricks-account-id')
-        // DATABRICKS_CLIENT_ID = credentials('databricks-client-id')
-        // DATABRICKS_CLIENT_SECRET = credentials('databricks-client-secret')
     }
 
     stages {
@@ -52,15 +54,45 @@ pipeline {
             }
         }
 
-        // stage('Run Main Function') {
-        //     steps {
-        //         sh """
-        //             . venv/bin/activate
-        //             pip list
-        //             dbx-utility
-        //         """
-        //     }
-        // }
+        stage('DAB Validation') {
+            steps {
+                script {
+                    try {
+                        def command = "${DBCLIPATH}/databricks bundle validate -t ${params.env}"
+                        // Execute the command
+                        sh(command)
+                    } catch (Exception e) { 
+                        echo "Error: ${e.getMessage()}"
+                    }
+                }
+            }
+        }
+        stage('DAB Deployment') {
+            steps {
+                script {
+                    try {
+                        def command = "${DBCLIPATH}/databricks bundle deploy -t ${params.env}"
+                        // Execute the command
+                        sh(command)
+                    } catch (Exception e) { 
+                        echo "Error: ${e.getMessage()}"
+                    }
+                }
+            }
+        }
+        stage('Job Run') {
+            steps {
+                script {
+                    try {
+                        def command = "${DBCLIPATH}/databricks bundle run -t ${params.env} ${params.job_name}"
+                        // Execute the command
+                        sh(command)
+                    } catch (Exception e) { 
+                        echo "Error: ${e.getMessage()}"
+                    }
+                }
+            }
+        }
     }
 
     post {
