@@ -58,7 +58,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        def command = "${DBCLIPATH}/databricks bundle destroy -t ${params.env}"
+                        def command = "${DBCLIPATH}/databricks bundle destroy -t ${params.env} --auto-approve"
                         // Execute the command
                         sh(command)
                     } catch (Exception e) { 
