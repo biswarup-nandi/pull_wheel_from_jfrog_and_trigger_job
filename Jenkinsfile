@@ -44,20 +44,20 @@ pipeline {
                     server.download(downloadSpec)
                 }
                 sh """
-                    ls -ltr
+                    ls -ltr dist/
                 """
             }
         }
 
-        stage('Run Main Function') {
-            steps {
-                sh """
-                    . venv/bin/activate
-                    pip list
-                    dbx-utility
-                """
-            }
-        }
+        // stage('Run Main Function') {
+        //     steps {
+        //         sh """
+        //             . venv/bin/activate
+        //             pip list
+        //             dbx-utility
+        //         """
+        //     }
+        // }
     }
 
     post {
