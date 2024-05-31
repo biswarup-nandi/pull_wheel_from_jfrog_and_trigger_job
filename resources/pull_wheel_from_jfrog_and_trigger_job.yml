@@ -1,0 +1,41 @@
+# The main job for poc1.
+resources:
+  jobs:
+    pull_wheel_from_jfrog_and_trigger_job:
+      name: pull_wheel_from_jfrog_and_trigger_job
+
+      email_notifications:
+        on_failure:
+          - biswarup.nandi@outlook.com
+
+      tasks:
+        - task_key: bootstrapping_environment
+          job_cluster_key: job_cluster
+          notebook_task:
+            notebook_path: /Workspace/Users/biswarup.nandi@outlook.com/DBX_CLI_AUTOMATION/bootstrap_script
+
+        - task_key: wheel_file_installation
+          depends_on:
+            - task_key: bootstrapping_environment
+          job_cluster_key: job_cluster
+          python_wheel_task:
+            package_name: dbx-utility
+            entry_point: main
+          libraries:
+            - whl: ../dist/*.whl
+
+        - task_key: wheel_package_run
+          depends_on:
+            - task_key: wheel_file_installation
+          job_cluster_key: job_cluster
+          notebook_task:
+            notebook_path: ../src/notebooks/notebook_using_wheel.ipynb
+
+      job_clusters:
+        - job_cluster_key: job_cluster
+          new_cluster:
+            spark_version: 13.3.x-scala2.12
+            node_type_id: i3.xlarge
+            autoscale:
+                min_workers: 1
+                max_workers: 2
