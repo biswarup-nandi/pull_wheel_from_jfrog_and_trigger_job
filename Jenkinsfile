@@ -5,7 +5,7 @@ pipeline {
 
     parameters {
         string defaultValue: 'dev', description: 'Deployment Environment', name: 'env'
-        string defaultValue: 'dab_e2e_job', description: 'Deployment Environment', name: 'job_name'
+        string defaultValue: 'pull_wheel_from_jfrog_and_trigger_job', description: 'Deployment Environment', name: 'job_name'
     }
 
 
@@ -30,7 +30,7 @@ pipeline {
             }
         }
 
-        stage('Pull and Install Wheel') {
+        stage('Pull Wheel') {
             steps {
                 script {
                     def server = Artifactory.server("${ARTIFACTORY_SERVER}")
