@@ -9,10 +9,10 @@ resources:
           - biswarup.nandi@outlook.com
 
       tasks:
-        - task_key: bootstrapping_environment
-          job_cluster_key: job_cluster
-          notebook_task:
-            notebook_path: /Workspace/Users/biswarup.nandi@outlook.com/DBX_CLI_AUTOMATION/bootstrap_script
+        # - task_key: bootstrapping_environment
+        #   job_cluster_key: job_cluster
+        #   notebook_task:
+        #     notebook_path: /Workspace/Users/biswarup.nandi@outlook.com/DBX_CLI_AUTOMATION/bootstrap_script
 
         - task_key: wheel_file_installation
           depends_on:
