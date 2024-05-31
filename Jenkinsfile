@@ -54,6 +54,20 @@ pipeline {
             }
         }
 
+        stage('DAB Destroy (If Exist)') {
+            steps {
+                script {
+                    try {
+                        def command = "${DBCLIPATH}/databricks bundle destroy -t ${params.env}"
+                        // Execute the command
+                        sh(command)
+                    } catch (Exception e) { 
+                        echo "Error: ${e.getMessage()}"
+                    }
+                }
+            }
+        }
+
         stage('DAB Validation') {
             steps {
                 script {
@@ -67,6 +81,7 @@ pipeline {
                 }
             }
         }
+
         stage('DAB Deployment') {
             steps {
                 script {
@@ -80,6 +95,7 @@ pipeline {
                 }
             }
         }
+
         stage('Job Run') {
             steps {
                 script {
