@@ -47,9 +47,9 @@ pipeline {
                 }
                 sh """
                     echo "Current Directory List --->"
-                    ls -ltr dist/
-                    echo "Wheel(dist) Directory List --->"
                     ls -ltr
+                    echo "Wheel(dist) Directory List --->"
+                    ls -ltr dist/
                 """
             }
         }
